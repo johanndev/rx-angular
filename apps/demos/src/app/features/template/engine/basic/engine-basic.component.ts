@@ -3,13 +3,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, map, share, tap } from 'rxjs/operators';
 import { describeEngine } from '../engine.service';
 
-const { injectState, provideState } = describeEngine({
+const { provideEngine, injectEngine } = describeEngine({
   count: 0,
 });
 
@@ -26,35 +27,43 @@ const { injectState, provideState } = describeEngine({
       <div class="col-4">
         <div class="mat-headline">Value</div>
         <div>
-          {{ engine.get('count') }}
+          {{ vm.count }}
         </div>
       </div>
       <div class="col-4">
         <div class="mat-headline">Value</div>
         <div>
-          {{ engine.get('count') }}
+          {{ vm.count }}
         </div>
       </div>
       <div class="col-4">
         <div class="mat-headline">Value</div>
         <div>
-          {{ engine.get('count') }}
+          {{ vm.count }}
         </div>
       </div>
     </div>
   `,
   styles: [``],
-  providers: [provideState()],
+  providers: [provideEngine()],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EngineBasicComponent {
-  readonly engine = injectState();
+export class EngineBasicComponent implements OnInit, AfterViewInit {
+  readonly vm = injectEngine().vm;
 
   @ViewChild('row') set row(row: ElementRef) {
     console.log(row);
   }
 
+  ngOnInit() {
+    console.log('NgOnInit');
+  }
+
+  ngAfterViewInit() {
+    console.log('ngAfterViewInit');
+  }
+
   increment() {
-    this.engine.set(({ count }) => ({ count: count + 1 }));
+    this.vm.count++;
   }
 }

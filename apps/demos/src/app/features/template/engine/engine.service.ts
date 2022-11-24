@@ -6,49 +6,69 @@ import {
   ViewRef,
   ɵɵdirectiveInject as inject,
 } from '@angular/core';
+import { Promise } from '@rx-angular/cdk/zone-less/browser';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { RxState, select } from '@rx-angular/state';
+import { ReplaySubject } from 'rxjs';
 
 export function describeEngine<T extends object>(initialState?: Partial<T>) {
-  const injectState = (): RxEngine<T> => {
+  const injectEngine = (): RxEngine<T> => {
     return inject(RxEngine, InjectFlags.Self);
   };
-  const provideState = (): StaticProvider => {
+  const provideEngine = (): StaticProvider => {
     return {
       provide: RxEngine,
       useFactory: () => {
         const cdRef = inject(ChangeDetectorRef);
-        const service = new RxEngine(cdRef, initialState);
-        (cdRef as ViewRef).onDestroy(() => {
-          service.ngOnDestroy();
-        });
-        return service;
+        return new RxEngine(cdRef, initialState);
       },
     };
   };
-  return { injectState, provideState };
+  return { injectEngine, provideEngine };
 }
 
 @Injectable()
-export class RxEngine<T extends object> extends RxState<T> {
-  constructor(private cdRef: ChangeDetectorRef, private initialState?: T) {
-    super();
+export class RxEngine<T extends object> {
+  private readonly strategyProvider = inject(RxStrategyProvider);
+  private readonly renderSubject = new ReplaySubject<void>(1);
+
+  readonly vm: T;
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private initialState?: Partial<T>
+  ) {
     cdRef.detach();
-    const strategyProvider = inject(RxStrategyProvider);
+    const renderSubject = this.renderSubject;
+    this.vm = new Proxy<T>({ ...initialState } as T, {
+      get(target, prop, receiver) {
+        return target[prop];
+      },
+      set(target: T, p: string | symbol, value: any, receiver: any): boolean {
+        target[p] = value;
+        renderSubject.next();
+        return true;
+      },
+    });
     if (initialState) {
-      this.set({ ...initialState });
+      renderSubject.next();
     }
-    this.hold(
-      this.$.pipe(select()).pipe(
-        strategyProvider.scheduleWith(
-          () => {
-            cdRef.detectChanges();
-          },
-          {
-            scope: (cdRef as any).context,
-          }
+    // hack to wait for NgOnInit ... not a cool solution
+    Promise.resolve().then(() => {
+      const sub = this.renderSubject
+        .pipe(
+          this.strategyProvider.scheduleWith(
+            () => {
+              this.cdRef.detectChanges();
+            },
+            {
+              scope: (this.cdRef as any).context,
+            }
+          )
         )
-      )
-    );
+        .subscribe();
+      (cdRef as ViewRef).onDestroy(() => {
+        sub.unsubscribe();
+      });
+    });
   }
 }
