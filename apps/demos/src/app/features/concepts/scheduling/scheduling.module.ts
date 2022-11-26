@@ -6,7 +6,7 @@ import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { ROUTES } from './scheduling.routes';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 
 const DECLARATIONS = [SchedulingComponent];
@@ -16,10 +16,12 @@ const DECLARATIONS = [SchedulingComponent];
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    LetModule, PushModule, UnpatchModule,
+    LetModule,
+    PushModule,
+    UnpatchModule,
     MatButtonModule,
-    VisualizerModule
+    VisualizerModule,
   ],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
 export class SchedulingModule {}

@@ -6,13 +6,11 @@ import { UnpatchModule } from '@rx-angular/template/unpatch';
 
 import { ROUTES } from './coalescing.routes';
 import { CoalescingComponent } from './coalescing/coalescing.component';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
 
-const DECLARATIONS = [
-  CoalescingComponent
-];
+const DECLARATIONS = [CoalescingComponent];
 
 @NgModule({
   declarations: [DECLARATIONS],
@@ -23,10 +21,9 @@ const DECLARATIONS = [
     StrategySelectModule,
     UnpatchModule,
     MatButtonModule,
-    PushModule
+    PushModule,
   ],
   providers: [],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
-export class CoalescingModule {
-}
+export class CoalescingModule {}

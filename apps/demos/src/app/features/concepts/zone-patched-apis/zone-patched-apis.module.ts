@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './zone-patched-apis.routes';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { PushModule } from '@rx-angular/template';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { ZonePatchedApisComponent } from './zone-patched-apis.component';
@@ -11,11 +11,8 @@ import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visual
 import { CdDefaultModule } from '../../../shared/debug-helper/cd-default/cd-default.module';
 import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
 
-
 @NgModule({
-  declarations: [
-    ZonePatchedApisComponent
-  ],
+  declarations: [ZonePatchedApisComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
@@ -25,8 +22,7 @@ import { ValueProvidersModule } from '../../../shared/debug-helper/value-provide
     PushModule,
     VisualizerModule,
     CdDefaultModule,
-    ValueProvidersModule
-  ]
+    ValueProvidersModule,
+  ],
 })
-export class ZonePatchedApisModule {
-}
+export class ZonePatchedApisModule {}

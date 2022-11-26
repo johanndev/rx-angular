@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RouterModule } from '@angular/router';
 import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
@@ -22,9 +22,8 @@ const DECLARATIONS = [PipePocComponent];
     MatButtonModule,
     UnpatchModule,
     PushModule,
-    LetModule
+    LetModule,
   ],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
-export class PipePocModule {
-}
+export class PipePocModule {}

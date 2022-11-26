@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RouterModule } from '@angular/router';
 import { PushModule } from '@rx-angular/template';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
@@ -18,9 +18,8 @@ const DECLARATIONS = [PushBasicComponent];
     PushModule,
     DirtyChecksModule,
     MatButtonModule,
-    UnpatchModule
+    UnpatchModule,
   ],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
-export class PushBasicModule {
-}
+export class PushBasicModule {}

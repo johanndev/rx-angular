@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { PushModule } from '@rx-angular/template';
 import { LetModule } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
@@ -25,7 +25,7 @@ const DECLARATIONS = [
   RecursiveComponentLetComponent,
   RecursiveEmbeddedViewLetComponent,
   RecursiveObservableWorkPushComponent,
-  RecursiveObservableWorkAsyncComponent
+  RecursiveObservableWorkAsyncComponent,
 ];
 
 @NgModule({
@@ -39,9 +39,9 @@ const DECLARATIONS = [
     VisualizerModule,
     ValueProvidersModule,
     RenderingsModule,
-    LetModule, PushModule
+    LetModule,
+    PushModule,
   ],
-  exports: DECLARATIONS
+  exports: DECLARATIONS,
 })
-export class RecursiveModule {
-}
+export class RecursiveModule {}
